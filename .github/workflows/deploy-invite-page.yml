@@ -1,0 +1,32 @@
+name: Publicar página de convite
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "web/aceitar-convite/**"
+      - ".github/workflows/deploy-invite-page.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - name: Preparar GitHub Pages
+        uses: actions/configure-pages@v6
+      - name: Enviar página
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: web/aceitar-convite
+      - name: Publicar site
+        id: deployment
+        uses: actions/deploy-pages@v5
